@@ -1,11 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { Product } from '@/types';
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import ProductPrice from './product-price';
 
 type ProductCardProps = {
-  product: any;
+  product: Product;
 };
 
 function ProductCard({ product }: ProductCardProps) {
