@@ -20,12 +20,19 @@ export const metadata: Metadata = {
     'Sign in to your ProStore account to access your dashboard and manage your products.',
 };
 
-async function SignInPage() {
+async function SignInPage(props: {
+  searchParams: Promise<{
+    callbackUrl: string;
+  }>;
+}) {
+  const { callbackUrl } = await props.searchParams;
+
   const session = await auth();
 
   if (session) {
-    redirect('/');
+    redirect(callbackUrl || '/');
   }
+
   return (
     <div className='w-full max-w-md mx-auto'>
       <Card>

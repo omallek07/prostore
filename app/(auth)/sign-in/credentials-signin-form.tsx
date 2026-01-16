@@ -7,12 +7,16 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signInDefaultValues } from '@/lib/constants';
 import { signInWithCredentials } from '@/lib/actions/user.actions';
+import { useSearchParams } from 'next/navigation';
 
 const CredentialsSignInForm = () => {
   const [data, action] = useActionState(signInWithCredentials, {
     success: false,
     message: '',
   });
+
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/';
 
   const SignInButton = () => {
     const { pending } = useFormStatus();
@@ -25,6 +29,7 @@ const CredentialsSignInForm = () => {
 
   return (
     <form action={action}>
+      <input type='hidden' name='callbackUrl' value={callbackUrl} />
       <div className='space-y-6'>
         <div>
           <Label className='mb-1.5' htmlFor='email'>
