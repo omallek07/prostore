@@ -9,17 +9,17 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { APP_NAME } from '@/lib/constants';
 
-import CredentialsSignInForm from './credentials-signin-form';
 import { auth } from '@/auth';
 import { redirect } from 'next/navigation';
+import SignUpForm from './signup-form';
 
 export const metadata: Metadata = {
-  title: 'Sign In - ProStore',
+  title: 'Sign Up - ProStore',
   description:
-    'Sign in to your ProStore account to access your dashboard and manage your products.',
+    'Sign up for a ProStore account to access your dashboard and manage your products.',
 };
 
-async function SignInPage(props: {
+async function SignUpPage(props: {
   searchParams: Promise<{
     callbackUrl: string;
   }>;
@@ -45,17 +45,17 @@ async function SignInPage(props: {
               priority={true}
             />
           </div>
-          <CardTitle className='text-center'>Sign In</CardTitle>
+          <CardTitle className='text-center'>Sign Up</CardTitle>
           <CardDescription className='text-center'>
-            Sign in to your account
+            Sign up to create an account
           </CardDescription>
         </CardHeader>
         <CardContent className='space-y-4'>
-          <CredentialsSignInForm />
+          <SignUpForm />
         </CardContent>
       </Card>
     </div>
   );
 }
 
-export default SignInPage;
+export default SignUpPage;
