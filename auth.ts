@@ -5,6 +5,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { compareSync } from 'bcrypt-ts-edge';
 import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
 export const config = {
   pages: {
@@ -79,9 +80,10 @@ export const config = {
       return session;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user }: any) {
+    async jwt({ token, user, session, trigger }: any) {
       // If user is available, set the token properties
       if (user) {
+        token.id = user.id;
         token.role = user.role;
 
         // If user has no name then use email
@@ -97,13 +99,67 @@ export const config = {
             },
           });
         }
+
+        if (trigger === 'signIn' || trigger === 'signUp') {
+          const cookiesObject = await cookies();
+          const sessionCartId = cookiesObject.get('sessionCartId')?.value;
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: {
+                sessionCartId,
+              },
+            });
+
+            if (sessionCart) {
+              // Delete current user cart
+              await prisma.cart.deleteMany({
+                where: {
+                  userId: user.id,
+                },
+              });
+
+              // Assign new cart
+              await prisma.cart.update({
+                where: {
+                  id: sessionCart.id,
+                },
+                data: {
+                  userId: user.id,
+                },
+              });
+            }
+          }
+        }
       }
+
+      // Handle session updates
+      if (session?.user.name && trigger === 'update') {
+        token.name = session.user.name;
+      }
+
       return token;
     },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     authorized({ request, auth }: any) {
-      // Check for session cart cookie
+      // Array of regex patterns of paths we want to protect
+      const protectedPaths = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/place-order/,
+        /\/user\/(.*)/,
+        /\/order\/(.*)/,
+        /\/admin/,
+      ];
+
+      // Get pathname from the req URL object
+      const { pathname } = request.nextUrl;
+
+      // Check if user is not authenticated and accessing a protected path
+      if (!auth && protectedPaths.some((p) => p.test(pathname))) return false;
+
       if (!request.cookies.get('sessionCartId')) {
+        // Check for session cart cookie
         // Generate new session cart id cookie
         const sessionCartId = crypto.randomUUID();
         // Clone the request headers

@@ -24,6 +24,8 @@ async function UserButton() {
     );
   }
 
+  const firstInitial = session.user?.name?.charAt(0).toUpperCase() ?? 'U';
+
   return (
     <div className='flex gap-2 items-center'>
       <DropdownMenu>
@@ -33,7 +35,7 @@ async function UserButton() {
               variant='ghost'
               className='relative w-8 h-8 rounded-full ml-2 flex items-center justify-center bg-gray-200 dark:bg-gray-700'
             >
-              <UserIcon />
+              {firstInitial}
             </Button>
           </div>
         </DropdownMenuTrigger>
