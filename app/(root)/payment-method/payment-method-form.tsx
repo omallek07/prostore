@@ -28,24 +28,12 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Loader, ArrowRight } from 'lucide-react';
-import { Generic, Visa, Paypal } from 'react-payment-logos/dist/flat';
 
 import { DEFAULT_PAYMENT_METHOD, PAYMENT_METHODS } from '@/lib/constants';
-import { updateUserPaymentMethod } from '@/lib/actions/user.actions';
 import { cn } from '@/lib/utils';
+import { updateUserPaymentMethod } from '@/lib/actions/user.actions';
 
-function returnPaymentIcon(paymentMethodType: string) {
-  switch (paymentMethodType) {
-    case 'PayPal':
-      return <Paypal />;
-    case 'Stripe':
-      return <Visa />;
-    case 'CashOnDelivery':
-      return <Generic />;
-    default:
-      return <Generic />;
-  }
-}
+import PaymentIcon from '@/components/payment-logo';
 
 type PaymentMethodFormProps = {
   preferredPaymentMethod: string | null;
@@ -126,7 +114,7 @@ const PaymentMethodForm = ({
                         >
                           <FieldContent>
                             <FieldTitle>
-                              {returnPaymentIcon(paymentMethod)}
+                              <PaymentIcon paymentMethodType={paymentMethod} />
                               <p
                                 className={cn(
                                   `${
