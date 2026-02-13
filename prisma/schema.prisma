@@ -22,7 +22,7 @@ model Product {
   isFeatured  Boolean     @default(false)
   banner      String?
   createdAt   DateTime    @default(now()) @db.Timestamp(6)
-  orderItems  OrderItem[]
+  OrderItem   OrderItem[]
 }
 
 model User {
@@ -37,8 +37,8 @@ model User {
   paymentMethod String?
   createdAt     DateTime  @default(now()) @db.Timestamp(6)
   updatedAt     DateTime  @updatedAt
-  Account       Account[]
-  Session       Session[]
+  account       Account[]
+  session       Session[]
   Cart          Cart[]
   Order         Order[]
 }
@@ -111,7 +111,7 @@ model Order {
   deliveredAt     DateTime?   @db.Timestamp(6)
   createdAt       DateTime    @default(now()) @db.Timestamp(6)
   user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  orderItem       OrderItem[]
+  orderitems      OrderItem[]
 }
 
 model OrderItem {
