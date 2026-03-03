@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { requireAdmin } from '@/lib/auth-guard';
 
 import Charts from './charts';
 
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 const AdminOverviewPage = async () => {
+  await requireAdmin();
   const session = await auth();
 
   if (session?.user?.role !== 'admin') {

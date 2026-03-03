@@ -1,28 +1,39 @@
+import { auth } from '@/auth';
 import Link from 'next/link';
-import { Metadata } from 'next';
-import { getMyOrders } from '@/lib/actions/order.actions';
-import { formatCurrency, formatDateTime, formatId } from '@/lib/utils';
+import Pagination from '@/components/shared/pagination';
 import {
   Table,
-  TableBody,
-  TableCell,
-  TableHead,
   TableHeader,
   TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
 } from '@/components/ui/table';
-import Pagination from '@/components/shared/pagination';
+import { getAllOrders } from '@/lib/actions/order.actions';
+import { formatId, formatDateTime, formatCurrency } from '@/lib/utils';
+import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
-  title: 'My Orders',
+  title: 'Admin Orders',
 };
 
-const OrdersPage = async (props: {
+const AdminOrdersPage = async (props: {
   searchParams: Promise<{ page: string }>;
 }) => {
-  const { page } = await props.searchParams;
+  const { page = '1' } = await props.searchParams;
 
-  const orders = await getMyOrders({ page: Number(page) || 1 });
+  const session = await auth();
+
+  if (session?.user?.role !== 'admin') {
+    throw new Error('User is not authorized');
+  }
+
+  const orders = await getAllOrders({
+    page: Number(page),
+  });
+
+  console.log('orders', orders);
 
   return (
     <div className='space-y-2'>
@@ -59,7 +70,9 @@ const OrdersPage = async (props: {
                 </TableCell>
                 <TableCell>
                   <Button asChild variant='outline' size='sm'>
-                    <Link href={`/order/${order.id}`}>Details</Link>
+                    <Link target='_blank' href={`/order/${order.id}`}>
+                      Details
+                    </Link>
                   </Button>
                 </TableCell>
               </TableRow>
@@ -77,4 +90,4 @@ const OrdersPage = async (props: {
   );
 };
 
-export default OrdersPage;
+export default AdminOrdersPage;
