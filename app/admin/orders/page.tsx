@@ -9,10 +9,11 @@ import {
   TableBody,
   TableCell,
 } from '@/components/ui/table';
-import { getAllOrders } from '@/lib/actions/order.actions';
+import { deleteOrder, getAllOrders } from '@/lib/actions/order.actions';
 import { formatId, formatDateTime, formatCurrency } from '@/lib/utils';
 import { Metadata } from 'next';
 import { Button } from '@/components/ui/button';
+import DeleteDialog from '@/components/shared/delete-dialog';
 
 export const metadata: Metadata = {
   title: 'Admin Orders',
@@ -74,6 +75,7 @@ const AdminOrdersPage = async (props: {
                       Details
                     </Link>
                   </Button>
+                  <DeleteDialog id={order.id} action={deleteOrder} />
                 </TableCell>
               </TableRow>
             ))}
