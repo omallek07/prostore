@@ -12,8 +12,8 @@ import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { hashSync } from 'bcrypt-ts-edge';
 import { prisma } from '@/db/prisma';
 
-import { formatError } from '../utils';
 import { ShippingAddress } from '@/types';
+import { defaultSuccessRes, defaultErrorRes } from './utils';
 
 // Sign in the user with credentials
 export async function signInWithCredentials(
@@ -27,16 +27,13 @@ export async function signInWithCredentials(
     });
 
     await signIn('credentials', user);
-    return { success: true, message: 'Signed in successfully' };
+    return defaultSuccessRes('Signed in successfully');
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
     }
 
-    return {
-      success: false,
-      message: 'Invalid email or password. Please try again.',
-    };
+    return defaultErrorRes('Invalid email or password. Please try again.');
   }
 }
 
@@ -70,16 +67,13 @@ export async function signUpUser(prevState: unknown, formData: FormData) {
       password: user.password,
     });
 
-    return { success: true, message: 'Signed up successfully' };
+    return defaultSuccessRes('Signed up successfully');
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
     }
 
-    return {
-      success: false,
-      message: await formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -121,15 +115,9 @@ export async function updateUserAddress(data: ShippingAddress) {
       },
     });
 
-    return {
-      success: true,
-      message: 'User updated successfully',
-    };
+    return defaultSuccessRes('User updated successfully');
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -160,15 +148,9 @@ export async function updateUserPaymentMethod(
       },
     });
 
-    return {
-      success: true,
-      message: 'User updated successfully',
-    };
+    return defaultSuccessRes('User updated successfully');
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -196,14 +178,8 @@ export async function updateUserProfile(user: { name: string; email: string }) {
       },
     });
 
-    return {
-      success: true,
-      message: 'User updated successfully',
-    };
+    return defaultSuccessRes('User updated successfully');
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }

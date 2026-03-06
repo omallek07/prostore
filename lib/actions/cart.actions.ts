@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers';
 import { CartItem } from '@/types';
-import { convertToPlainObject, formatError } from '../utils';
+import { convertToPlainObject } from '../utils';
 import { auth } from '@/auth';
 import { prisma } from '@/db/prisma';
 import { cartItemSchema, insertCartSchema } from '../validators';
@@ -10,10 +10,12 @@ import { round2 } from '../utils';
 import { revalidatePath } from 'next/cache';
 import { Prisma } from '../generated/prisma/client';
 
+import { defaultErrorRes, defaultSuccessRes } from './utils';
+
 // Calculate cart prices
 const calcPrice = (items: CartItem[]) => {
   const itemsPrice = round2(
-    items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0)
+    items.reduce((acc, item) => acc + Number(item.price) * item.qty, 0),
   );
 
   const shippingPrice = round2(itemsPrice > 100 ? 0 : 10);
@@ -70,15 +72,11 @@ export async function addItemToCart(data: CartItem) {
 
       // Revalidate product page
       revalidatePath(`/product/${product.slug}`);
-
-      return {
-        success: true,
-        message: `${product.name} added to cart`,
-      };
+      return defaultSuccessRes(`${product.name} added to cart`);
     } else {
       // Check if item is already in the cart
       const existItem = (cart.items as CartItem[]).find(
-        (x) => x.productId === item.productId
+        (x) => x.productId === item.productId,
       );
 
       if (existItem) {
@@ -88,7 +86,7 @@ export async function addItemToCart(data: CartItem) {
         }
         // Increase the quantity
         (cart.items as CartItem[]).find(
-          (x) => x.productId === item.productId
+          (x) => x.productId === item.productId,
         )!.qty = existItem.qty + 1;
       } else {
         // If item does not exist in cart
@@ -113,19 +111,12 @@ export async function addItemToCart(data: CartItem) {
       });
 
       revalidatePath(`/product/${product.slug}`);
-
-      return {
-        success: true,
-        message: `${product.name} ${
-          existItem ? 'updated in' : 'added to'
-        } cart`,
-      };
+      return defaultSuccessRes(
+        `${product.name} ${existItem ? 'updated in' : 'added to'} cart`,
+      );
     }
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -148,7 +139,7 @@ export async function removeItemFromCart(productId: string) {
 
     // Check for item
     const exist = (cart.items as CartItem[]).find(
-      (x) => x.productId === productId
+      (x) => x.productId === productId,
     );
     if (!exist) throw new Error('Item not found');
 
@@ -156,7 +147,7 @@ export async function removeItemFromCart(productId: string) {
     if (exist.qty === 1) {
       // Remove from the cart
       cart.items = (cart.items as CartItem[]).filter(
-        (x) => x.productId !== productId
+        (x) => x.productId !== productId,
       );
     } else {
       // Decrease the qty
@@ -177,15 +168,11 @@ export async function removeItemFromCart(productId: string) {
 
     revalidatePath(`/product/${product.slug}`);
 
-    return {
-      success: true,
-      message: `${product.name} ${exist ? 'updated in' : 'removed from'} cart`,
-    };
+    return defaultSuccessRes(
+      `${product.name} ${exist ? 'updated in' : 'removed from'} cart`,
+    );
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 

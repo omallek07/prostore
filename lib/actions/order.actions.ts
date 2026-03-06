@@ -1,7 +1,7 @@
 'use server';
 
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
-import { convertToPlainObject, formatError } from '../utils';
+import { convertToPlainObject } from '../utils';
 import { auth } from '@/auth';
 import { getMyCart } from './cart.actions';
 import { getUserById } from './user.actions';
@@ -12,6 +12,8 @@ import { CartItem, PaymentResult } from '@/types';
 import { paypal } from '@/lib/paypal';
 import { revalidatePath } from 'next/cache';
 import { PAGE_SIZE } from '../constants';
+
+import { defaultSuccessRes, defaultErrorRes } from './utils';
 
 // Create order and create order items
 export async function createOrder() {
@@ -102,10 +104,7 @@ export async function createOrder() {
     };
   } catch (error) {
     if (!isRedirectError(error)) throw error;
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -159,10 +158,7 @@ export async function createPayPalOrder(orderId: string) {
       data: paypalOrder.id,
     };
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -208,15 +204,9 @@ export async function approvePayPalOrder(
 
     revalidatePath(`/order/${orderId}`);
 
-    return {
-      success: true,
-      message: 'Your order has been paid successfully',
-    };
+    return defaultSuccessRes('Your order has been paid successfully');
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -409,15 +399,9 @@ export async function deleteOrder(id: string) {
     });
 
     revalidatePath('/admin/orders');
-    return {
-      success: true,
-      message: 'Order deleted successfully',
-    };
+    return defaultSuccessRes('Order deleted successfully');
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -430,15 +414,9 @@ export async function updateOrderToPaidCOD(orderId: string) {
 
     revalidatePath(`/order/${orderId}`);
 
-    return {
-      success: true,
-      message: 'Order marked as paid',
-    };
+    return defaultSuccessRes('Order marked as paid');
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
 
@@ -465,14 +443,9 @@ export async function deliverOrder(orderId: string) {
     });
 
     revalidatePath(`/order/${orderId}`);
-    return {
-      success: true,
-      message: 'Order has been marked delivered',
-    };
+
+    return defaultSuccessRes('Order has been marked delivered');
   } catch (error) {
-    return {
-      success: false,
-      message: formatError(error),
-    };
+    return defaultErrorRes(error);
   }
 }
