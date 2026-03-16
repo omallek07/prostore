@@ -35,6 +35,22 @@ const AdminProductsPage = async (props: {
     category,
   });
 
+  if (!products?.data?.length) {
+    return (
+      <div className='flex flex-col space-y-4'>
+        <h1 className='h2-bold'>Products</h1>
+        <span>
+          No existing products found. Click below to create new product.
+        </span>
+        <div className='w-2'>
+          <Button asChild variant='default'>
+            <Link href='/admin/products/create'>Create Product</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className='space-y-2'>
       <div className='flex-between'>
@@ -70,7 +86,7 @@ const AdminProductsPage = async (props: {
               <TableCell>{product.rating}</TableCell>
               <TableCell className='flex gap-1'>
                 <Button asChild variant='outline' size='sm'>
-                  <Link href={`admin/products/${product.id}`}>Edit</Link>
+                  <Link href={`/admin/products/${product.id}`}>Edit</Link>
                 </Button>
                 <DeleteDialog id={product.id} action={deleteProduct} />
               </TableCell>
@@ -78,7 +94,7 @@ const AdminProductsPage = async (props: {
           ))}
         </TableBody>
       </Table>
-      {products?.totalPages && products.totalPages > 1 && (
+      {products.totalPages > 1 && (
         <Pagination page={page} totalPages={products.totalPages} />
       )}
     </div>

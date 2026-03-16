@@ -24,6 +24,8 @@ const OrdersPage = async (props: {
 
   const orders = await getMyOrders({ page: Number(page) || 1 });
 
+  if (!orders?.data?.length) return <div>No existing orders found.</div>;
+
   return (
     <div className='space-y-2'>
       <div className='h2 h2-bold'>Orders</div>

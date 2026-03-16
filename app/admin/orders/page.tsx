@@ -34,7 +34,13 @@ const AdminOrdersPage = async (props: {
     page: Number(page),
   });
 
-  console.log('orders', orders);
+  if (!orders?.data?.length)
+    return (
+      <div className='flex flex-col space-y-4'>
+        <div className='h2 h2-bold'>Orders</div>
+        <span>No existing orders found.</span>
+      </div>
+    );
 
   return (
     <div className='space-y-2'>
