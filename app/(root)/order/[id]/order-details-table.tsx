@@ -75,7 +75,9 @@ const OrderDetailsTable = ({
     const res = await createPayPalOrder(order.id);
     if (!res.success) return toast.error(res.message);
 
-    return res.data;
+    if ('data' in res) {
+      return res.data;
+    }
   };
 
   const handleApprovePaypalOrder = async (data: { orderID: string }) => {

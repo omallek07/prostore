@@ -12,15 +12,15 @@ const PlaceOrderForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const { success, message, redirectTo } = await createOrder();
-    if (success) {
-      toast.success(message);
+    const response = await createOrder();
+    if (response.success) {
+      toast.success(response.message);
     } else {
-      toast.error(message);
+      toast.error(response.message);
     }
 
-    if (redirectTo) {
-      router.push(redirectTo);
+    if ('redirectTo' in response && response.redirectTo) {
+      router.push(response.redirectTo);
     }
   };
 
