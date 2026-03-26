@@ -16,7 +16,7 @@ export const insertProductSchema = z.object({
   category: z.string().min(3, 'Category is required'),
   brand: z.string().min(3, 'Brand is required'),
   description: z.string().min(3, 'Description is required'),
-  stock: z.coerce.number(),
+  stock: z.number(),
   images: z.array(z.string()).min(1, 'At least one image is required'),
   isFeatured: z.boolean(),
   banner: z.string().nullable(),

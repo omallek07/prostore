@@ -247,7 +247,7 @@ const OrderDetailsTable = ({
               </div>
               {/* Paypal Payment */}
               {!isPaid && paymentMethod === 'PayPal' && (
-                <div>
+                <div style={{ colorScheme: 'none' }}>
                   <PayPalScriptProvider
                     options={{
                       clientId: paypalClientId,

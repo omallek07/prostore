@@ -24,7 +24,7 @@ import { createProduct, updateProduct } from '@/lib/actions/product.actions';
 import { UploadButton } from '@/lib/uploadthing';
 
 import slugify from 'slugify';
-import { Card, CardContent, CardHeader } from '../ui/card';
+import { Card, CardContent } from '../ui/card';
 import { Checkbox } from '../ui/checkbox';
 
 type ProductFormProps = {
@@ -36,9 +36,11 @@ type ProductFormProps = {
 const ProductForm = ({ type, product, productId }: ProductFormProps) => {
   const router = useRouter();
 
-  const onSubmit: SubmitHandler<z.infer<typeof insertProductSchema>> = async (
-    values,
-  ) => {
+  const currentProductSchema =
+    type === 'update' ? updateProductSchema : insertProductSchema;
+  type FormValues = z.infer<typeof currentProductSchema>;
+
+  const onSubmit: SubmitHandler<FormValues> = async (values) => {
     const { success, message } = await (type === 'update'
       ? updateProduct({
           ...values,
@@ -55,11 +57,8 @@ const ProductForm = ({ type, product, productId }: ProductFormProps) => {
     router.push('/admin/products');
   };
 
-  const form = useForm<z.infer<typeof insertProductSchema>>({
-    resolver:
-      type === 'update'
-        ? zodResolver(updateProductSchema)
-        : zodResolver(insertProductSchema),
+  const form = useForm<FormValues>({
+    resolver: zodResolver(currentProductSchema),
     defaultValues:
       product && type === 'update' ? product : productDefaultValues,
   });
