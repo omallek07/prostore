@@ -14,10 +14,6 @@ const links = [
     title: 'Orders',
     href: '/user/orders',
   },
-  {
-    title: 'Shipping Address',
-    href: '/user/shipping-address',
-  },
 ];
 
 type MainNavProps = React.HTMLAttributes<HTMLElement> & {

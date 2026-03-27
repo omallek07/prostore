@@ -392,9 +392,9 @@ const ProductForm = ({ type, product, productId }: ProductFormProps) => {
         />
       </div>
 
-      <div className='mt-8'>
+      <div className='mt-8 flex flex-row-reverse'>
         <Button
-          className='cursor-pointer col-span-2 w-full'
+          className='cursor-pointer col-span-2'
           type='submit'
           size='lg'
           disabled={form.formState.isSubmitting}

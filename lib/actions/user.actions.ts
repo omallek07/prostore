@@ -17,6 +17,7 @@ import { ShippingAddress } from '@/types';
 import { defaultSuccessRes, defaultErrorRes } from './utils';
 import { PAGE_SIZE } from '../constants';
 import { revalidatePath } from 'next/cache';
+import { getMyCart } from './cart.actions';
 
 // Sign in the user with credentials
 export async function signInWithCredentials(
@@ -40,11 +41,18 @@ export async function signInWithCredentials(
   }
 }
 
-// Sign out the current user
+// Sign user out
 export async function signOutUser() {
+  // get current users cart and delete it so it does not persist to next user
+  const currentCart = await getMyCart();
+
+  if (currentCart?.id) {
+    await prisma.cart.delete({ where: { id: currentCart.id } });
+  } else {
+    console.warn('No cart found for deletion.');
+  }
   await signOut();
 }
-
 // Sign up a new user
 export async function signUpUser(prevState: unknown, formData: FormData) {
   try {

@@ -3,11 +3,10 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/db/prisma';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { compareSync } from 'bcrypt-ts-edge';
-import type { NextAuthConfig } from 'next-auth';
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-export const config = {
+export const { handlers, auth, signIn, signOut } = NextAuth({
   pages: {
     signIn: '/sign-in',
     error: '/sign-in',
@@ -65,8 +64,7 @@ export const config = {
     }),
   ],
   callbacks: {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async session({ session, user, trigger, token }: any) {
+    async session({ session, user, trigger, token }) {
       // Set the user ID from the token
       session.user.id = token.sub;
       session.user.role = token.role;
@@ -79,12 +77,11 @@ export const config = {
 
       return session;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async jwt({ token, user, session, trigger }: any) {
+    async jwt({ token, user, session, trigger }) {
       // If user is available, set the token properties
       if (user) {
         token.id = user.id;
-        token.role = user.role;
+        token.role = user.role || '';
 
         // If user has no name then use email
         if (user.name === 'NO_NAME') {
@@ -140,8 +137,7 @@ export const config = {
 
       return token;
     },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    authorized({ request, auth }: any) {
+    authorized({ request, auth }) {
       // Array of regex patterns of paths we want to protect
       const protectedPaths = [
         /\/shipping-address/,
@@ -181,6 +177,4 @@ export const config = {
       }
     },
   },
-} satisfies NextAuthConfig;
-
-export const { handlers, auth, signIn, signOut } = NextAuth(config);
+});

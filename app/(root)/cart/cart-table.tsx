@@ -24,6 +24,56 @@ type CartTableProps = {
   cart?: Cart;
 };
 
+function AddButton({ item }: { item: CartItem }) {
+  const [isPending, startTransition] = useTransition();
+  return (
+    <Button
+      disabled={isPending}
+      variant='outline'
+      type='button'
+      onClick={() =>
+        startTransition(async () => {
+          const { success, message } = await addItemToCart(item);
+          if (!success) {
+            toast.error(message);
+          }
+        })
+      }
+    >
+      {isPending ? (
+        <Loader className='w-4 h-4 animate-spin' />
+      ) : (
+        <Plus className='w-4 h-4' />
+      )}
+    </Button>
+  );
+}
+
+function RemoveButton({ item }: { item: CartItem }) {
+  const [isPending, startTransition] = useTransition();
+  return (
+    <Button
+      disabled={isPending}
+      variant='outline'
+      type='button'
+      onClick={() =>
+        startTransition(async () => {
+          const { success, message } = await removeItemFromCart(item.productId);
+          if (!success) {
+            toast.error(message);
+          }
+        })
+      }
+    >
+      {isPending ? (
+        <Loader className='w-4 h-4 animate-spin' />
+      ) : (
+        <Minus className='w-4 h-4' />
+      )}
+    </Button>
+  );
+}
+
 const CartTable = ({ cart }: CartTableProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -90,33 +140,9 @@ const CartTable = ({ cart }: CartTableProps) => {
                       </Link>
                     </TableCell>
                     <TableCell className='flex-center gap-2'>
-                      <Button
-                        variant='outline'
-                        type='button'
-                        className='cursor-pointer'
-                        onClick={() => handleRemoveFromCart(item)}
-                        disabled={isPending}
-                      >
-                        {isPending ? (
-                          <Loader className='w-4 h-4 animate-spin' />
-                        ) : (
-                          <Minus className='w-4 h-4 cursor-pointer' />
-                        )}
-                      </Button>
+                      <RemoveButton item={item} />
                       <span>{item.qty}</span>
-                      <Button
-                        variant='outline'
-                        type='button'
-                        className='cursor-pointer'
-                        onClick={() => handleAddToCart(item)}
-                        disabled={isPending}
-                      >
-                        {isPending ? (
-                          <Loader className='w-4 h-4 animate-spin' />
-                        ) : (
-                          <Plus className='w-4 h-4' />
-                        )}
-                      </Button>
+                      <AddButton item={item} />
                     </TableCell>
                     <TableCell className='text-right'>${item.price}</TableCell>
                   </TableRow>
