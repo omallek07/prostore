@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 };
 
 const AdminOrdersPage = async (props: {
-  searchParams: Promise<{ page: string }>;
+  searchParams: Promise<{ page: string; query: string }>;
 }) => {
-  const { page = '1' } = await props.searchParams;
+  const { page = '1', query: searchText } = await props.searchParams;
 
   const session = await auth();
 
@@ -32,6 +32,7 @@ const AdminOrdersPage = async (props: {
 
   const orders = await getAllOrders({
     page: Number(page),
+    query: searchText,
   });
 
   if (!orders?.data?.length)
@@ -44,7 +45,19 @@ const AdminOrdersPage = async (props: {
 
   return (
     <div className='space-y-2'>
-      <div className='h2 h2-bold'>Orders</div>
+      <div className='flex items-center gap-4'>
+        <h1 className='h2-bold'>Orders</h1>
+        {searchText && (
+          <div>
+            Filtered by <i>&quot;{searchText}&quot; </i>
+            <Link href='/admin/orders'>
+              <Button className='cursor-pointer' variant='outline' size='sm'>
+                Clear
+              </Button>
+            </Link>
+          </div>
+        )}
+      </div>
       <div className='overflow-x-auto'>
         <Table>
           <TableHeader>

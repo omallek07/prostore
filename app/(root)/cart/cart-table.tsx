@@ -36,6 +36,8 @@ function AddButton({ item }: { item: CartItem }) {
           const { success, message } = await addItemToCart(item);
           if (!success) {
             toast.error(message);
+          } else {
+            toast.success(message);
           }
         })
       }
@@ -61,6 +63,8 @@ function RemoveButton({ item }: { item: CartItem }) {
           const { success, message } = await removeItemFromCart(item.productId);
           if (!success) {
             toast.error(message);
+          } else {
+            toast.success(message);
           }
         })
       }
@@ -77,32 +81,6 @@ function RemoveButton({ item }: { item: CartItem }) {
 const CartTable = ({ cart }: CartTableProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-
-  const handleAddToCart = async (item: CartItem) => {
-    startTransition(async () => {
-      const res = await addItemToCart(item);
-
-      if (!res.success) {
-        toast.error(res.message);
-        return;
-      }
-
-      toast.success(res.message);
-    });
-  };
-
-  const handleRemoveFromCart = async (item: CartItem) => {
-    startTransition(async () => {
-      const res = await removeItemFromCart(item.productId);
-
-      if (!res.success) {
-        toast.error(res.message);
-        return;
-      }
-
-      toast.success(res.message);
-    });
-  };
 
   return (
     <>

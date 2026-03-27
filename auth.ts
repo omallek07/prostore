@@ -81,7 +81,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // If user is available, set the token properties
       if (user) {
         token.id = user.id;
-        token.role = user.role || '';
+        token.role = user.role || 'user';
 
         // If user has no name then use email
         if (user.name === 'NO_NAME') {
