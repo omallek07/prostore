@@ -31,15 +31,19 @@ import {
   deliverOrder,
 } from '@/lib/actions/order.actions';
 
+import StripePayment from './stripe-payment';
+
 type OrderDetailsTableProps = {
   order: Order;
   paypalClientId: string;
+  stripeClientSecret: string | null;
   isAdmin: boolean;
 };
 
 const OrderDetailsTable = ({
   order,
   paypalClientId,
+  stripeClientSecret,
   isAdmin,
 }: OrderDetailsTableProps) => {
   const {
@@ -260,6 +264,15 @@ const OrderDetailsTable = ({
                     />
                   </PayPalScriptProvider>
                 </div>
+              )}
+
+              {/* Stripe Payment */}
+              {!isPaid && paymentMethod === 'Stripe' && stripeClientSecret && (
+                <StripePayment
+                  priceInCents={Number(order.totalPrice) * 100}
+                  clientSecret={stripeClientSecret}
+                  orderId={order.id}
+                />
               )}
 
               {/* Cash on Delivery */}
