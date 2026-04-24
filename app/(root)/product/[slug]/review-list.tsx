@@ -1,8 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect } from 'react';
 import { Review } from '@/types';
-import { Calendar, Link, User } from 'lucide-react';
+import { Calendar, User } from 'lucide-react';
 import { useState } from 'react';
 import ReviewForm from './review-form';
 import { getReviewsForProduct } from '@/lib/actions/review.actions';
@@ -58,7 +59,7 @@ const ReviewList = ({ userId, productId, productSlug }: ReviewListProps) => {
           >
             sign in
           </Link>{' '}
-          to write a reivew.
+          to write a review
         </div>
       )}
       <div className='flex flex-col gap-3'>
