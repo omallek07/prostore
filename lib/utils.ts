@@ -22,6 +22,7 @@ export function formatNumberWithDecimal(num: number): string {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function formatError(error: any) {
   if (typeof error === 'string') return error;
+  if (error instanceof Error) return error.message;
 
   if (error?.name === 'ZodError') {
     const flattenedError = z.flattenError(error);

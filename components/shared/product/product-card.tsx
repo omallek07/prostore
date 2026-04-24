@@ -4,6 +4,7 @@ import { Product } from '@/types';
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import ProductPrice from './product-price';
+import Rating from '../rating';
 
 type ProductCardProps = {
   product: Product;
@@ -29,7 +30,7 @@ function ProductCard({ product }: ProductCardProps) {
           <h2 className='text-sm font-medium'>{product.name}</h2>
         </Link>
         <div className='flex-between gap-4'>
-          <p>{product.rating} Stars</p>
+          <Rating value={Number(product.rating)} />
           {product.stock > 0 ? (
             <ProductPrice value={Number(product.price)} />
           ) : (
