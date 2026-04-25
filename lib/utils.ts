@@ -21,9 +21,6 @@ export function formatNumberWithDecimal(num: number): string {
 // Format errors
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function formatError(error: any) {
-  if (typeof error === 'string') return error;
-  if (error instanceof Error) return error.message;
-
   if (error?.name === 'ZodError') {
     const flattenedError = z.flattenError(error);
     const fieldErrors = Object.values(flattenedError.fieldErrors);
@@ -34,6 +31,9 @@ export function formatError(error: any) {
   if (error?.code === 'P2002') {
     return 'This email already exists. Please use a different email.';
   }
+
+  if (typeof error === 'string') return error;
+  if (error instanceof Error) return error.message;
 
   return 'An unexpected error occurred. Please try again.';
 }

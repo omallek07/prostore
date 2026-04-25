@@ -54,7 +54,7 @@ const ReviewList = ({ userId, productId, productSlug }: ReviewListProps) => {
         <div>
           Please{' '}
           <Link
-            className='text-blue-700 px-2'
+            className='text-blue-700 px-1'
             href={`/sign-in?callbackUrl=/product/${productSlug}`}
           >
             sign in
