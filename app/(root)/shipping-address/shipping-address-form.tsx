@@ -38,7 +38,7 @@ const ShippingAddressForm = ({ address }: ShippingAddressFormProps) => {
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof shippingAddressSchema>> = async (
-    values
+    values,
   ) => {
     startTransition(async () => {
       const { success, message } = await updateUserAddress(values);
@@ -48,7 +48,6 @@ const ShippingAddressForm = ({ address }: ShippingAddressFormProps) => {
         return;
       }
 
-      toast.success(message);
       router.push('/payment-method');
     });
   };

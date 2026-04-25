@@ -20,7 +20,7 @@ const CheckoutSteps = ({ current = 0 }: CheckoutStepsProps) => {
           <div
             className={cn(
               'p-2 w-56 rounded-full text-center text-small',
-              index === current ? 'bg-secondary' : ''
+              index === current ? 'bg-secondary' : '',
             )}
           >
             {step}

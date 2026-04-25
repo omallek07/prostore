@@ -54,7 +54,7 @@ const PaymentMethodForm = ({
   const [isPending, startTransition] = useTransition();
 
   const onSubmit: SubmitHandler<z.infer<typeof paymentMethodSchema>> = async (
-    values
+    values,
   ) => {
     startTransition(async () => {
       const { success, message } = await updateUserPaymentMethod(values);
@@ -64,7 +64,6 @@ const PaymentMethodForm = ({
         return;
       }
 
-      toast.success(message);
       router.push('/place-order');
     });
   };
@@ -121,7 +120,7 @@ const PaymentMethodForm = ({
                                     field.value === paymentMethod
                                       ? 'font-semibold'
                                       : ''
-                                  }`
+                                  }`,
                                 )}
                               >
                                 {paymentMethod}

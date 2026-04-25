@@ -1,6 +1,4 @@
-'use client';
 import Link from 'next/link';
-import { useSession } from 'next-auth/react';
 import { signOutUser } from '@/lib/actions/user.actions';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,11 +9,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { UserIcon } from 'lucide-react';
+import { auth } from '@/auth';
 
-function UserButton() {
-  const session = useSession();
+async function UserButton() {
+  const session = await auth();
 
-  if (!session.data) {
+  if (!session) {
     return (
       <Button asChild variant='ghost'>
         <Link href='/sign-in'>
@@ -26,9 +25,7 @@ function UserButton() {
     );
   }
 
-  const sessionData = session.data;
-
-  const firstInitial = sessionData?.user?.name?.charAt(0).toUpperCase() ?? 'U';
+  const firstInitial = session?.user?.name?.charAt(0).toUpperCase() ?? 'U';
 
   return (
     <div className='flex gap-2 items-center'>
@@ -47,10 +44,10 @@ function UserButton() {
           <DropdownMenuLabel className='font-normal'>
             <div className='flex flex-col space-y-1'>
               <div className='text-sm font-medium leading-none'>
-                {sessionData.user?.name}
+                {session.user?.name}
               </div>
               <div className='text-muted-foreground font-medium leading-none'>
-                {sessionData.user?.email}
+                {session.user?.email}
               </div>
             </div>
           </DropdownMenuLabel>
@@ -67,7 +64,7 @@ function UserButton() {
             </Link>
           </DropdownMenuItem>
 
-          {sessionData.user?.role === 'admin' && (
+          {session.user?.role === 'admin' && (
             <DropdownMenuItem>
               <Link href='/admin/overview' className='w-full'>
                 Admin

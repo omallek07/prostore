@@ -13,9 +13,7 @@ const PlaceOrderForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const response = await createOrder();
-    if (response.success) {
-      toast.success(response.message);
-    } else {
+    if (!response.success) {
       toast.error(response.message);
     }
 

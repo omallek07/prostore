@@ -127,7 +127,7 @@ export async function updateUserAddress(data: ShippingAddress) {
       },
     });
 
-    return defaultSuccessRes('User updated successfully');
+    return defaultSuccessRes('User shipping updated successfully');
   } catch (error) {
     return defaultErrorRes(error);
   }
@@ -160,7 +160,7 @@ export async function updateUserPaymentMethod(
       },
     });
 
-    return defaultSuccessRes('User updated successfully');
+    return defaultSuccessRes('User payment updated successfully');
   } catch (error) {
     return defaultErrorRes(error);
   }
@@ -225,7 +225,7 @@ export async function updateUserProfile(user: { name: string; email: string }) {
       },
     });
 
-    return defaultSuccessRes('User updated successfully');
+    return defaultSuccessRes('User profile supdated successfully');
   } catch (error) {
     return defaultErrorRes(error);
   }

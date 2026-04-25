@@ -40,7 +40,12 @@ const StripePayment = ({
 
     const handleSubmit = async (e: FormEvent) => {
       e.preventDefault();
-      if (!stripe || !elements || !email) return;
+      if (!stripe || !elements) return;
+
+      if (!email) {
+        setErrorMessage('Please include email to proceed.');
+        return;
+      }
 
       setIsLoading(true);
 
