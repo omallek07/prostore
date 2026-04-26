@@ -20,8 +20,6 @@ const ShippingAddressPage = async () => {
 
   const session = await auth();
 
-  console.log('session', session);
-
   const userId = session?.user?.id;
 
   if (!userId) {
@@ -29,7 +27,6 @@ const ShippingAddressPage = async () => {
   }
 
   const user = await getUserById(userId);
-  console.log('user', user);
 
   return (
     <>

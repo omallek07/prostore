@@ -34,7 +34,7 @@ import {
 import StripePayment from './stripe-payment';
 
 type OrderDetailsTableProps = {
-  order: Order;
+  order: Omit<Order, 'paymentResult'>;
   paypalClientId: string;
   stripeClientSecret: string | null;
   isAdmin: boolean;

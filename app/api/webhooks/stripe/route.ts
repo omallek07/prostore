@@ -15,6 +15,8 @@ export async function POST(req: NextRequest) {
   if (event.type === 'charge.succeeded') {
     const { object } = event.data;
 
+    console.log('hti chatqsdsadasdas');
+
     // Update order status
     await updateOrderToPaid({
       orderId: object.metadata.orderId,
