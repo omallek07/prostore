@@ -12,8 +12,11 @@ type ProductCardProps = {
 
 function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className='w-full max-w-sm'>
-      <CardHeader className='p-0 items-center'>
+    <Card
+      className='w-full max-w-sm 
+    transition-border duration-500 hover:border-amber-300'
+    >
+      <CardHeader className='py-0 px-1 items-center'>
         <Link href={`/product/${product.slug}`}>
           <Image
             src={product.images[0]}

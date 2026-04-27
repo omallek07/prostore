@@ -35,11 +35,14 @@ function Menu() {
           <SheetTrigger className='align-middle'>
             <EllipsisVertical />
           </SheetTrigger>
-          <SheetContent className='flex flex-col items-start'>
-            <SheetTitle>Menu</SheetTitle>
-            <ModeToggle />
-            {Buttons}
-            <SheetDescription></SheetDescription>
+          <SheetContent className='px-5'>
+            <SheetTitle className='h1-bold pt-3'>Menu</SheetTitle>
+            <div className='border-b' />
+            <div className='flex w-full flex-between gap-3'>
+              <ModeToggle />
+              {Buttons}
+            </div>
+            <div className='border-b' />
           </SheetContent>
         </Sheet>
       </nav>
